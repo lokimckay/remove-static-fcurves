@@ -3,10 +3,10 @@ schema_version = "1.0.0"
 # Example of manifest file for a Blender extension
 # Change the values according to your extension
 id = "remove_static_fcurves"
-version = "1.0.0"
+version = "0.1.0"
 name = "Remove Static FCurves"
-# tagline = "This is another extension"
-maintainer = "Loki <lokimckay@gmail.com>"
+tagline = "Clean up animation channels that have no data"
+maintainer = "Loki McKay <lokimckay@gmail.com>"
 # Supported types: "add-on", "theme"
 type = "add-on"
 
@@ -15,7 +15,7 @@ type = "add-on"
 
 # # Optional: tag list defined by Blender and server, see:
 # # https://docs.blender.org/manual/en/dev/advanced/extensions/tags.html
-# tags = ["Animation", "Sequencer"]
+tags = ["Animation"]
 
 blender_version_min = "4.2.0"
 # # Optional: Blender version that the extension does not support, earlier versions are supported.

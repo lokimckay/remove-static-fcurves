@@ -1,10 +1,4 @@
 import bpy
-bl_info = {
-    "name": "Remove Static FCurves",
-    "blender": (4, 3, 0),
-    "category": "Animation",
-    "description": "Removes static animation channels from objects in the scene.",
-}
 
 
 class RemoveStaticFcurvesOperator(bpy.types.Operator):
@@ -30,7 +24,7 @@ class RemoveStaticFcurvesOperator(bpy.types.Operator):
 
     @staticmethod
     def remove_static_fcurves():
-        """Remove static FCurves from all objects in the scene."""
+        """Remove static FCurves that have no data."""
         for obj in bpy.data.objects:
             if obj.animation_data and obj.animation_data.action:
                 action = obj.animation_data.action

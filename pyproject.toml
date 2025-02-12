@@ -1,0 +1,26 @@
+[project]
+name = "remove-static-fcurves"
+version = "0.1.0"
+description = "Remove fcurves from Blender animations that don't change at all."
+authors = [
+    {name = "lokimckay", email = "lokimckay@gmail.com"},
+]
+dependencies = []
+requires-python = "==3.10.*"
+readme = "README.md"
+license = {text = "MIT"}
+
+[dependency-groups]
+dev = [
+    "platformdirs>=4.3.6",
+    "pyyaml>=6.0.2",
+    "fake-bpy-module>=20241230",
+]
+
+[tool.pdm]
+distribution = true
+
+[tool.pdm.scripts]
+dev = "python scripts/dev.py"
+clean = "rm -rf build"
+build = "python scripts/build.py"

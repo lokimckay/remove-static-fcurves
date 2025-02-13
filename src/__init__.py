@@ -8,8 +8,14 @@ class RemoveStaticFcurvesOperator(bpy.types.Operator):
     bl_options = {"REGISTER", "UNDO"}
 
     def execute(self, context):
-        self.remove_static_fcurves()
-        self.report({'INFO'}, "Removed static animation channels.")
+        has_selection = any(obj.select_get()
+                            for obj in bpy.context.selected_objects)
+
+        if not has_selection:
+            self.report({'INFO'}, "Please select objects.")
+        else:
+            self.remove_static_fcurves()
+            self.report({'INFO'}, "Removed static animation channels.")
         return {'FINISHED'}
 
     @staticmethod
@@ -25,7 +31,7 @@ class RemoveStaticFcurvesOperator(bpy.types.Operator):
     @staticmethod
     def remove_static_fcurves():
         """Remove static FCurves that have no data."""
-        for obj in bpy.data.objects:
+        for obj in bpy.context.selected_objects:
             if obj.animation_data and obj.animation_data.action:
                 action = obj.animation_data.action
                 fcurves_to_remove = [
@@ -42,12 +48,14 @@ def menu_func(self, context):
 def register():
     bpy.utils.register_class(RemoveStaticFcurvesOperator)
     bpy.types.GRAPH_MT_channel.append(menu_func)
+    bpy.types.DOPESHEET_MT_channel.append(menu_func)
     print("[Remove Static FCurves] registered")
 
 
 def unregister():
     bpy.utils.unregister_class(RemoveStaticFcurvesOperator)
     bpy.types.GRAPH_MT_channel.remove(menu_func)
+    bpy.types.DOPESHEET_MT_channel.remove(menu_func)
     print("[Remove Static FCurves] unregistered")
 
 

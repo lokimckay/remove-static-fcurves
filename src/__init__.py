@@ -12,7 +12,7 @@ class RemoveStaticFcurvesOperator(bpy.types.Operator):
                             for obj in bpy.context.selected_objects)
 
         if not has_selection:
-            self.report({'INFO'}, "Please select objects.")
+            self.report({'ERROR_INVALID_INPUT'}, "Please select objects.")
         else:
             self.remove_static_fcurves()
             self.report({'INFO'}, "Removed static animation channels.")

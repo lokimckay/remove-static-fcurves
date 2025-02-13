@@ -3,7 +3,7 @@ schema_version = "1.0.0"
 # Example of manifest file for a Blender extension
 # Change the values according to your extension
 id = "remove_static_fcurves"
-version = "0.1.0"
+version = "0.2.0"
 name = "Remove Static FCurves"
 tagline = "Clean up animation channels that have no data"
 maintainer = "Loki McKay <lokimckay@gmail.com>"

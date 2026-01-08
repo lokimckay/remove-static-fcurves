@@ -1,3 +1,4 @@
 addon_name: "remove_static_fcurves"
-blender_version: 4.3
-blender_home: # (optional override) C:/Users/YOUR_NAME/AppData/Roaming/Blender Foundation/Blender/4.3
+blender_version: 5.0
+blender_data_home: # C:/Users/<YOUR NAME>/AppData/Roaming/Blender Foundation/Blender/5.0 # (optional override)
+blender_binary: # C:/Program Files/Blender Foundation/Blender 5.0/blender.exe # (optional override)

@@ -1,7 +1,18 @@
-"""Compatibility utilities for multi-version Blender support."""
+"""
+Utility modules for Remove Static FCurves extension
+"""
 
-from . import compat
-from . import version
+# Handle module reloading
+if "bpy" in locals():
+    import importlib
+    if "compat" in locals():
+        importlib.reload(compat)
+    if "version" in locals():
+        importlib.reload(version)
+else:
+    from . import compat
+    from . import version
 
-__all__ = ['compat', 'version']
+import bpy
 
+__all__ = ["compat", "version"]

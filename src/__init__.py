@@ -1,68 +1,41 @@
-import bpy
-from . import utils
+"""
+Remove Static FCurves - Blender Extension
+Removes animation channels with static (unchanging) values
+"""
 
+bl_info = {
+    "name": "Remove Static FCurves",
+    "author": "lokimckay",
+    "version": (0, 3, 0),
+    "blender": (5, 0, 0),
+    "location": "Graph Editor > Channel > Remove Static FCurves",
+    "description": "Remove animation channels with static (unchanging) values",
+    "category": "Animation",
+}
 
-class RemoveStaticFcurvesOperator(bpy.types.Operator):
-    """Operator to remove static FCurves"""
-    bl_idname = "graph.remove_static_fcurves"
-    bl_label = "Remove Static FCurves"
-    bl_options = {"REGISTER", "UNDO"}
-
-    def execute(self, context):
-        has_selection = any(obj.select_get()
-                            for obj in bpy.context.selected_objects)
-
-        if not has_selection:
-            self.report({'ERROR_INVALID_INPUT'}, "Please select objects.")
-        else:
-            self.remove_static_fcurves()
-            self.report({'INFO'}, "Removed static animation channels.")
-        return {'FINISHED'}
-
-    @staticmethod
-    def is_static_fcurve(fcurve):
-        """Check if an FCurve is static (all keyframes have the same value)."""
-        keyframes = fcurve.keyframe_points
-        if len(keyframes) < 2:
-            return True  # A single keyframe is considered static
-
-        first_value = keyframes[0].co[1]
-        return all(kf.co[1] == first_value for kf in keyframes)
-
-    @staticmethod
-    def remove_static_fcurves():
-        """Remove static FCurves that have no data."""
-        for obj in bpy.context.selected_objects:
-            if obj.animation_data and obj.animation_data.action:
-                action = obj.animation_data.action
-                fcurves = utils.compat.get_action_fcurves(action)
-                
-                if fcurves is None:
-                    continue
-                
-                fcurves_to_remove = [
-                    fcurve for fcurve in fcurves if RemoveStaticFcurvesOperator.is_static_fcurve(fcurve)]
-
-                for fcurve in fcurves_to_remove:
-                    utils.compat.remove_action_fcurve(action, fcurve)
-
-
-def menu_func(self, context):
-    self.layout.operator(RemoveStaticFcurvesOperator.bl_idname)
+# Handle module reloading
+if "bpy" in locals():
+    import importlib
+    if "operator" in locals():
+        importlib.reload(operator)
+    if "utils" in locals():
+        importlib.reload(utils)
+    print("[Remove Static FCurves] Reloading modules...")
+else:
+    from . import operator
+    from . import utils
 
 
 def register():
-    bpy.utils.register_class(RemoveStaticFcurvesOperator)
-    bpy.types.GRAPH_MT_channel.append(menu_func)
-    bpy.types.DOPESHEET_MT_channel.append(menu_func)
-    print("[Remove Static FCurves] registered")
+    """Register all classes and handlers"""
+    operator.register()
+    print("[Remove Static FCurves] Registered")
 
 
 def unregister():
-    bpy.utils.unregister_class(RemoveStaticFcurvesOperator)
-    bpy.types.GRAPH_MT_channel.remove(menu_func)
-    bpy.types.DOPESHEET_MT_channel.remove(menu_func)
-    print("[Remove Static FCurves] unregistered")
+    """Unregister all classes and handlers"""
+    operator.unregister()
+    print("[Remove Static FCurves] Unregistered")
 
 
 if __name__ == "__main__":

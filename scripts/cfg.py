@@ -15,14 +15,17 @@ with open(CFG_PATH, 'r') as stream:
 # Config
 ADDON_NAME = cfg["addon_name"]
 BLENDER_VERSION = cfg["blender_version"]
-BLENDER_HOME = cfg["blender_home"] or join(APPDATA_DIR, str(BLENDER_VERSION))
+BLENDER_DATA_HOME = cfg["blender_data_home"] or join(
+    APPDATA_DIR, str(BLENDER_VERSION))
 
+# Binary
+BLENDER_BINARY = cfg["blender_binary"] or "blender"
 
 # Symlinking
 SRC_DIR = join(PROJECT_ROOT, 'src', ADDON_NAME)
 if not exists(SRC_DIR):
     SRC_DIR = join(PROJECT_ROOT, 'src')
-ADDON_DIR = join(BLENDER_HOME, 'scripts', 'addons', ADDON_NAME)
+ADDON_DIR = join(BLENDER_DATA_HOME, 'scripts', 'addons', ADDON_NAME)
 
 # Env
 ENV_FILE = join(SRC_DIR, "env.py")

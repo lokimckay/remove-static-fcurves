@@ -5,17 +5,25 @@ import subprocess
 from os.path import dirname, join
 from threading import Thread, Event
 
+EXTENSION_NAME = "remove_static_fcurves"
+
 
 def install_watchdog():
+    import site
+    site.addsitedir(site.getusersitepackages())
+
     try:
         import watchdog
         print("Watchdog ready")
         return
-    except:
+    except ImportError:
         # This can sometimes be brittle if python decides to use a different install location
-        cmd = [sys.executable, '-m', 'pip', 'install', 'watchdog']
+        cmd = [sys.executable, '-m', 'pip', 'install', '--user', 'watchdog']
         print(" $ %s" % " ".join(cmd))
-        subprocess.run(cmd)
+        subprocess.run(cmd, check=True)
+
+        site.addsitedir(site.getusersitepackages())
+        import watchdog
 
 
 def watch(dir, on_file_change, extensions):
@@ -55,7 +63,43 @@ def watch(dir, on_file_change, extensions):
 
 
 def on_file_change():
-    bpy.ops.script.reload()
+    """Reload the extension"""
+    import importlib
+
+    try:
+        print(f"\nReloading {EXTENSION_NAME}")
+
+        # Unregister first
+        if EXTENSION_NAME in sys.modules:
+            module = sys.modules[EXTENSION_NAME]
+            if hasattr(module, 'unregister'):
+                print(f"  Unregistering {EXTENSION_NAME}")
+                module.unregister()
+
+        # Reload all extension modules
+        modules_to_reload = [
+            name for name in list(sys.modules.keys())
+            if name.startswith(EXTENSION_NAME)
+        ]
+        modules_to_reload.sort()  # Reload parent modules before children
+
+        for module_name in modules_to_reload:
+            print(f"  Reloading: {module_name}")
+            importlib.reload(sys.modules[module_name])
+
+        # Re-register
+        if EXTENSION_NAME in sys.modules:
+            module = sys.modules[EXTENSION_NAME]
+            if hasattr(module, 'register'):
+                print(f"  Registering {EXTENSION_NAME}")
+                module.register()
+
+        print(f"{EXTENSION_NAME} reloaded successfully")
+
+    except Exception as e:
+        print(f"Error reloading {EXTENSION_NAME}: {e}")
+        import traceback
+        traceback.print_exc()
 
 
 def start_watching():

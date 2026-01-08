@@ -20,6 +20,13 @@ pdm run dev
 
 Any changes made in external editors should automatically reflect in blender.
 
+### Releasing
+
+1. Bump version in `src/blender_manifest.toml`
+2. Commit and push
+3. Run `pdm run build`
+4. Upload the generated zip file to `https://extensions.blender.org/add-ons/remove-static-fcurves/manage/versions/new/`
+
 ## Features
 
 - Automatic hot-reloading in blender when changes are made

@@ -1,4 +1,5 @@
 import bpy
+from . import utils
 
 
 class RemoveStaticFcurvesOperator(bpy.types.Operator):
@@ -34,11 +35,16 @@ class RemoveStaticFcurvesOperator(bpy.types.Operator):
         for obj in bpy.context.selected_objects:
             if obj.animation_data and obj.animation_data.action:
                 action = obj.animation_data.action
+                fcurves = utils.compat.get_action_fcurves(action)
+                
+                if fcurves is None:
+                    continue
+                
                 fcurves_to_remove = [
-                    fcurve for fcurve in action.fcurves if RemoveStaticFcurvesOperator.is_static_fcurve(fcurve)]
+                    fcurve for fcurve in fcurves if RemoveStaticFcurvesOperator.is_static_fcurve(fcurve)]
 
                 for fcurve in fcurves_to_remove:
-                    action.fcurves.remove(fcurve)
+                    utils.compat.remove_action_fcurve(action, fcurve)
 
 
 def menu_func(self, context):

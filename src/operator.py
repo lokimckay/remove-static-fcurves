@@ -49,6 +49,10 @@ class RemoveStaticFcurvesOperator(bpy.types.Operator):
 
     @staticmethod
     def is_static_fcurve(fcurve):
+        # If the curve has modifiers, keep it
+        if fcurve.modifiers and len(fcurve.modifiers) > 0:
+            return False
+
         """Check if an FCurve is static (all keyframes have the same value)."""
         keyframes = fcurve.keyframe_points
         if len(keyframes) < 2:

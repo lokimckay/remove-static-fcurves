@@ -49,7 +49,7 @@ class RemoveStaticFcurvesOperator(bpy.types.Operator):
 
     @staticmethod
     def is_static_fcurve(fcurve):
-        # NEW CONDITION: If the curve has modifiers, keep it
+        # If the curve has modifiers, keep it
         if fcurve.modifiers and len(fcurve.modifiers) > 0:
             return False
 
@@ -127,4 +127,3 @@ def unregister():
 
 if __name__ == "__main__":
     register()
-
